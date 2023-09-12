@@ -9,7 +9,6 @@ app.use(cors());
 
 // Resto del código del servidor...
 
-
 // Configuración de la conexión a la base de datos
 const connection = mysql.createConnection({
   host: '127.0.0.1',
