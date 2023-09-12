@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Descargar PDF</title>
+</head>
+
+<body>
+  <button id="downloadButton">Descargar PDF</button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const downloadButton = document.getElementById('downloadButton');
+
+      downloadButton.addEventListener('click', async () => {
+        fetch('http://localhost:3000/api/data')
+          .then(res => res.json())
+          .then(jsonResponse => {
+            // Accede al objeto Buffer dentro del JSON
+            const bufferArray = jsonResponse[0].pdf.data;
+            
+            // Convierte el array en un ArrayBuffer
+            const arrayBuffer = new Uint8Array(bufferArray).buffer;
+
+            const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+
+            // Crear una URL de objeto Blob
+            const blobUrl = URL.createObjectURL(blob);
+
+            // Crear un enlace de descarga
+            const downloadLink = document.createElement('a');
+            downloadLink.href = blobUrl;
+            downloadLink.download = 'documento.pdf'; // Nombre del archivo a descargar
+
+            // Agregar el enlace de descarga al DOM
+            document.body.appendChild(downloadLink);
+
+            // Simular un clic en el enlace para iniciar la descarga
+            downloadLink.click();
+
+            // Eliminar el enlace después de la descarga
+            document.body.removeChild(downloadLink);
+          })
+          .catch(error => {
+            console.error('Error al obtener el PDF:', error);
+          });
+      });
+    });
+  </script>
+</body>
+
+</html>
